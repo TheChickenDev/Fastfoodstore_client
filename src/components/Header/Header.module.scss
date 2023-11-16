@@ -5,6 +5,11 @@
     height: 100px;
     padding: 0 128px;
     background-color: #ffbb00;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
 }
 
 .header-section {
