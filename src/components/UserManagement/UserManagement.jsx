@@ -112,7 +112,8 @@ function UserManagement({ isShow }) {
 
     const handleShowUpdate = async (userId) => {
         setIsLoading(true);
-        const access_token = localStorage.getItem('access_token');
+        let access_token = localStorage.getItem('access_token');
+        access_token = JSON.parse(access_token);
         const res = await api.userGetDetails(userId, access_token);
         await setSelectedUser(res);
         setShowUpdate(true);
