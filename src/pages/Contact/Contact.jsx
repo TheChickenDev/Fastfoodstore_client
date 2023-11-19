@@ -5,6 +5,8 @@ import { faMap, faPhone, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { useRef } from 'react';
+import emailjs from '@emailjs/browser';
 
 const cx = classNames.bind(styles);
 
@@ -25,8 +27,18 @@ function Contact() {
         resolver: yupResolver(schema),
     });
 
+    const form = useRef();
+
     function onSubmit(data) {
-        console.log(data);
+        emailjs.sendForm('service_b93xz6h', 'template_zp6hnjv', form.current, 'Kr34vRZ3aczdIbbZS').then(
+            (result) => {
+                console.log(result.text);
+            },
+            (error) => {
+                console.log(error.text);
+            },
+        );
+        form.current.reset();
     }
 
     return (
@@ -60,7 +72,7 @@ function Contact() {
                 </div>
                 <div className={cx('section')}>
                     <h3 className={cx('subtitle')}>Gửi tin nhắn cho chúng tôi</h3>
-                    <form onSubmit={handleSubmit(onSubmit)} className={cx('form-login')}>
+                    <form onSubmit={handleSubmit(onSubmit)} className={cx('form-login')} ref={form}>
                         <div className={cx('form-group')}>
                             <input
                                 className={cx('form-input')}
