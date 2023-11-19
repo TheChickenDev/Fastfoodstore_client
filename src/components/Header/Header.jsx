@@ -112,6 +112,7 @@ function Header() {
             });
         dispatch(resetUser());
         localStorage.removeItem('access_token');
+        navigate(paths.login);
     };
 
     useEffect(() => {
