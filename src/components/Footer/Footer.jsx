@@ -5,10 +5,24 @@ import { paths } from '../../routes';
 import logo from '../../assets/images/logo.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebookF, faInstagram, faThreads, faTiktok } from '@fortawesome/free-brands-svg-icons';
+import { useEffect, useState } from 'react';
+import { jwtDecode } from 'jwt-decode';
 
 const cx = classNames.bind(styles);
 
 function Footer() {
+    const [isAdmin, setIsAdmin] = useState(false);
+
+    useEffect(() => {
+        const access_token = localStorage.getItem('access_token');
+        let decoded;
+        if (access_token) decoded = jwtDecode(access_token);
+
+        if (decoded?.isAdmin) {
+            setIsAdmin(true);
+        }
+    }, []);
+
     return (
         <footer className={cx('footer')}>
             <div className={cx('footer-section')}>
@@ -23,23 +37,25 @@ function Footer() {
                     </div>
                 </div>
             </div>
-            <div className={cx('footer-quicklinks')}>
-                <h4 className={cx('footer-title')}>Liên kết</h4>
-                <div className={cx('footer-links')}>
-                    <Link className={cx('footer-link')} to={paths.home}>
-                        Home page
-                    </Link>
-                    <Link className={cx('footer-link')} to={paths.menu}>
-                        Menu
-                    </Link>
-                    <Link className={cx('footer-link')} to={paths.about}>
-                        Về chúng tôi
-                    </Link>
-                    <Link className={cx('footer-link')} to={paths.contact}>
-                        Liên hệ với chúng tôi
-                    </Link>
+            {!isAdmin && (
+                <div className={cx('footer-quicklinks')}>
+                    <h4 className={cx('footer-title')}>Liên kết</h4>
+                    <div className={cx('footer-links')}>
+                        <Link className={cx('footer-link')} to={paths.home}>
+                            Home page
+                        </Link>
+                        <Link className={cx('footer-link')} to={paths.menu}>
+                            Menu
+                        </Link>
+                        <Link className={cx('footer-link')} to={paths.about}>
+                            Về chúng tôi
+                        </Link>
+                        <Link className={cx('footer-link')} to={paths.contact}>
+                            Liên hệ với chúng tôi
+                        </Link>
+                    </div>
                 </div>
-            </div>
+            )}
             <div className={cx('footer-time')}>
                 <h4 className={cx('footer-title')}>Thời gian mở cửa</h4>
                 <p className={cx('footer-timestamp')}>Thứ hai - thứ sáu: 8am - 18pm</p>

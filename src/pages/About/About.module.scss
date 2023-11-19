@@ -2,6 +2,7 @@
     background: url('../../assets/images/about/slogan.jpg') top center / cover no-repeat;
     background-attachment: fixed;
     scroll-behavior: smooth;
+    margin-top: var(--header-height);
 }
 #content {
     width: 100%;

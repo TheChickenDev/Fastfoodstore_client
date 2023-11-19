@@ -12,14 +12,6 @@ import * as request from './utils/userRequests';
 function App() {
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        const { decoded, localAccessToken } = handleDecoded();
-        if (decoded?.id) {
-            handleGetUserDetails(decoded.id, localAccessToken);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
     request.axiosJWT.interceptors.request.use(
         async (config) => {
             const currentTime = new Date();
@@ -51,6 +43,14 @@ function App() {
             dispatch(updateUser({ ...res, access_token }));
         }
     };
+
+    useEffect(() => {
+        const { decoded, localAccessToken } = handleDecoded();
+        if (decoded?.id) {
+            handleGetUserDetails(decoded.id, localAccessToken);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <BrowserRouter>

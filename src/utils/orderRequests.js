@@ -1,15 +1,11 @@
 import axios from 'axios';
 
 const request = axios.create({
-    baseURL: process.env.REACT_APP_API_URL + '/api/user/',
-});
-
-export const axiosJWT = axios.create({
-    baseURL: process.env.REACT_APP_API_URL + '/api/user/',
+    baseURL: process.env.REACT_APP_API_URL + '/api/order/',
 });
 
 export const get = async (path, options = {}) => {
-    const response = await axiosJWT.get(path, options);
+    const response = await request.get(path, options);
     return response.data;
 };
 
@@ -20,11 +16,6 @@ export const post = async (path, options = {}) => {
 
 export const put = async (path, options = {}) => {
     const response = await request.put(path, options);
-    return response.data;
-};
-
-export const remove = async (path, options = {}) => {
-    const response = await request.delete(path, options);
     return response.data;
 };
 

@@ -48,6 +48,33 @@ export const userUpdate = async (id, formData) => {
     }
 };
 
+export const userAddToCart = async (id, data) => {
+    try {
+        const response = await request.post(`add-to-cart/${id}`, data);
+        return response.data;
+    } catch (error) {
+        alert(error.message);
+    }
+};
+
+export const userRemoveFromCart = async (id, data) => {
+    try {
+        const response = await request.post(`delete-from-cart/${id}`, data);
+        return response.data;
+    } catch (error) {
+        alert(error.message);
+    }
+};
+
+export const userClearCart = async (id) => {
+    try {
+        const response = await request.post(`clear-cart/${id}`);
+        return response.data;
+    } catch (error) {
+        alert(error.message);
+    }
+};
+
 export const refreshToken = async () => {
     try {
         const response = await request.post('refresh-token', {
@@ -63,6 +90,24 @@ export const userLogout = async () => {
     try {
         const response = await request.post('log-out');
         return response.data;
+    } catch (error) {
+        alert(error.message);
+    }
+};
+
+export const userGetAll = async () => {
+    try {
+        const response = await request.get('get-all');
+        return response.data;
+    } catch (error) {
+        alert(error.message);
+    }
+};
+
+export const userDelete = async (id) => {
+    try {
+        const response = await request.remove(`delete/${id}`);
+        return response;
     } catch (error) {
         alert(error.message);
     }

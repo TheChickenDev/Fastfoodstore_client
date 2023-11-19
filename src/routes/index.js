@@ -6,7 +6,8 @@ import Contact from '../pages/Contact';
 import About from '../pages/About';
 import Profile from '../pages/Profile';
 import Cart from '../pages/Cart';
-import ProductInfo from '../pages/ProductInfo';
+import Payment from '../pages/Payment';
+import UserManagement from '../pages/UserManagement';
 
 const paths = {
     home: '/',
@@ -16,8 +17,9 @@ const paths = {
     contact: '/contact',
     about: '/about',
     profile: '/user',
-    cart: '/user/cart',
-    productInfo: '/product',
+    cart: '/cart',
+    payment: '/payment',
+    userManagement: '/user-management',
 };
 
 const routes = [
@@ -62,8 +64,13 @@ const routes = [
         isDefault: true,
     },
     {
-        path: paths.productInfo,
-        component: ProductInfo,
+        path: paths.payment,
+        component: Payment,
+        isDefault: true,
+    },
+    {
+        path: paths.userManagement,
+        component: UserManagement,
         isDefault: true,
     },
 ];

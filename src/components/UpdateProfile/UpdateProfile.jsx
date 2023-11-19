@@ -105,7 +105,7 @@ function UpdateProfile() {
             <div className={cx('container')}>
                 <h2 className={cx('title')}>Hồ sơ của tôi</h2>
                 <hr />
-                <form onSubmit={handleSubmit(onSubmit)} className={cx('form-login')} ref={formRef}>
+                <form onSubmit={handleSubmit(onSubmit)} className={cx('form')} ref={formRef}>
                     <div className={cx('form-section')}>
                         <div className={cx('form-group')}>
                             <label className={cx('form-label')}>Họ và tên: </label>
