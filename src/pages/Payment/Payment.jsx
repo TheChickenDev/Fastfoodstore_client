@@ -1,12 +1,14 @@
 import styles from './Payment.module.scss';
 import classNames from 'classnames/bind';
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateUser } from '../../redux/slices/userSlice';
 import { jwtDecode } from 'jwt-decode';
 import * as orderAPI from '../../services/orderServices';
 import * as userAPI from '../../services/userServices';
 import Loading from '../../components/Loading';
+import { useNavigate } from 'react-router-dom';
+import { paths } from '../../routes';
 
 const cx = classNames.bind(styles);
 
@@ -14,6 +16,8 @@ function Payment() {
     const userInfo = useSelector((state) => state.user);
     const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch();
+
+    const navigate = useNavigate();
 
     const handlePaymentClick = async (e) => {
         e.preventDefault();
@@ -71,6 +75,15 @@ function Payment() {
             }
         }
     };
+
+    useEffect(() => {
+        const access_token = localStorage.getItem('access_token');
+        if (!access_token) {
+            navigate(paths.login);
+            return;
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <Fragment>

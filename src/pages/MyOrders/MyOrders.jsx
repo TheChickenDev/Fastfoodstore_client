@@ -3,11 +3,15 @@ import classNames from 'classnames/bind';
 import { Fragment, useEffect, useState } from 'react';
 import * as api from '../../services/orderServices';
 import { jwtDecode } from 'jwt-decode';
+import { useNavigate } from 'react-router-dom';
+import { paths } from '../../routes';
 
 const cx = classNames.bind(styles);
 
 function MyOrders() {
     const [renderList, setRenderList] = useState();
+
+    const navigate = useNavigate();
 
     const getMyOrders = async (id) => {
         const res = await api.orderGetAll();
@@ -18,8 +22,13 @@ function MyOrders() {
 
     useEffect(() => {
         const access_token = localStorage.getItem('access_token');
+        if (!access_token) {
+            navigate(paths.login);
+            return;
+        }
         const decoded = jwtDecode(access_token);
         if (decoded?.id) getMyOrders(decoded.id);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const convertDate = (date) => {

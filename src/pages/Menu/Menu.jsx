@@ -17,6 +17,8 @@ import {
     faMartiniGlassCitrus,
     faPizzaSlice,
 } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
+import { paths } from '../../routes';
 import ProductDetails from '../../components/ProductDetails';
 import Loading from '../../components/Loading';
 
@@ -31,6 +33,8 @@ function Menu() {
     const [showProductDetails, setShowProductDetails] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState();
     const [isLoading, setIsLoading] = useState(false);
+
+    const navigate = useNavigate();
 
     const getdata = async () => {
         setIsLoading(true);
@@ -76,7 +80,13 @@ function Menu() {
     };
 
     useEffect(() => {
+        const access_token = localStorage.getItem('access_token');
+        if (!access_token) {
+            navigate(paths.login);
+            return;
+        }
         getdata();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {

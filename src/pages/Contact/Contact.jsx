@@ -5,8 +5,10 @@ import { faMap, faPhone, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import emailjs from '@emailjs/browser';
+import { useNavigate } from 'react-router-dom';
+import { paths } from '../../routes';
 
 const cx = classNames.bind(styles);
 
@@ -29,6 +31,8 @@ function Contact() {
 
     const form = useRef();
 
+    const navigate = useNavigate();
+
     function onSubmit(data) {
         emailjs.sendForm('service_b93xz6h', 'template_zp6hnjv', form.current, 'Kr34vRZ3aczdIbbZS').then(
             (result) => {
@@ -40,6 +44,15 @@ function Contact() {
         );
         form.current.reset();
     }
+
+    useEffect(() => {
+        const access_token = localStorage.getItem('access_token');
+        if (!access_token) {
+            navigate(paths.login);
+            return;
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <div className={cx('wrapper')}>

@@ -35,7 +35,8 @@ const schema = yup
         rePassword: yup
             .string()
             .required('Trường này không được bỏ trống')
-            .matches(passwordRegExp, 'Mật khẩu không được chứa ký tự đặc biệt'),
+            .matches(passwordRegExp, 'Mật khẩu không được chứa ký tự đặc biệt')
+            .oneOf([yup.ref('password'), null], 'Mật khẩu xác nhận không khớp'),
         image: yup.mixed(),
     })
     .required();
