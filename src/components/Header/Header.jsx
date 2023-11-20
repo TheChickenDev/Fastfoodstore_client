@@ -115,6 +115,11 @@ function Header() {
         navigate(paths.login);
     };
 
+    const handleMyOrderClick = (e) => {
+        e.preventDefault();
+        navigate(paths.myOrders);
+    };
+
     useEffect(() => {
         const access_token = localStorage.getItem('access_token');
         let decoded;
@@ -171,6 +176,9 @@ function Header() {
                                     <div className={cx('header-popup-btns')}>
                                         <div className={cx('header-popup-btn')} onClick={handleAccountClick}>
                                             Tài khoản
+                                        </div>
+                                        <div className={cx('header-popup-btn')} onClick={handleMyOrderClick}>
+                                            Đơn hàng của tôi
                                         </div>
                                         <div className={cx('header-popup-btn')} onClick={handleLogoutClick}>
                                             Đăng xuất

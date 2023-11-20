@@ -18,6 +18,7 @@ import {
     faPizzaSlice,
 } from '@fortawesome/free-solid-svg-icons';
 import ProductDetails from '../../components/ProductDetails';
+import Loading from '../../components/Loading';
 
 const cx = classNames.bind(styles);
 
@@ -29,11 +30,14 @@ function Menu() {
     const [typeIndex, setTypeIndex] = useState(0);
     const [showProductDetails, setShowProductDetails] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState();
+    const [isLoading, setIsLoading] = useState(false);
 
     const getdata = async () => {
+        setIsLoading(true);
         const res = await api.productGetAll();
         setProducts(res);
         setFilteredProducts(res);
+        setIsLoading(false);
     };
 
     const handleSearchClick = (e) => {
@@ -175,6 +179,7 @@ function Menu() {
                 </section>
             </div>
             <ProductDetails isShow={showProductDetails} productId={selectedProduct} />
+            <Loading isLoading={isLoading} />
         </Fragment>
     );
 }

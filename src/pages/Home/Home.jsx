@@ -187,7 +187,7 @@ function Home() {
                                 Thực đơn
                             </button>
                             <button className={cx('tab-btn')} onClick={(e) => handleChangeTabClick(e, 2)}>
-                                Thống kê
+                                Đơn hàng
                             </button>
                         </section>
                         <section className={cx('content')}>
