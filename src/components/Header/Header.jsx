@@ -177,9 +177,11 @@ function Header() {
                                         <div className={cx('header-popup-btn')} onClick={handleAccountClick}>
                                             Tài khoản
                                         </div>
-                                        <div className={cx('header-popup-btn')} onClick={handleMyOrderClick}>
-                                            Đơn hàng của tôi
-                                        </div>
+                                        {!isAdmin && (
+                                            <div className={cx('header-popup-btn')} onClick={handleMyOrderClick}>
+                                                Đơn hàng của tôi
+                                            </div>
+                                        )}
                                         <div className={cx('header-popup-btn')} onClick={handleLogoutClick}>
                                             Đăng xuất
                                         </div>

@@ -1,8 +1,11 @@
 import { Fragment, useEffect, useState } from 'react';
 import styles from './Statistics.module.scss';
 import classNames from 'classnames/bind';
-import * as api from '../../services/orderServices';
+import * as orderAPI from '../../services/orderServices';
+import * as userAPI from '../../services/userServices';
 import Loading from '../Loading';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
 const cx = classNames.bind(styles);
 
@@ -16,8 +19,12 @@ function Statistics({ isShow }) {
     const [filterMonth, setFilterMonth] = useState();
     const [totalAmount, setTotalAmount] = useState(0);
 
+    const [selectedUser, setSelectedUser] = useState();
+    const [selectedOrder, setSelectedOrder] = useState();
+    const [showDetails, setShowDetails] = useState(false);
+
     const getOrders = async () => {
-        const res = await api.orderGetAll();
+        const res = await orderAPI.orderGetAll();
         if (res) {
             setRenderList(res);
             setList(res);
@@ -26,7 +33,7 @@ function Statistics({ isShow }) {
 
     const handleConfirmClick = async (orderId) => {
         setIsLoading(true);
-        await api
+        await orderAPI
             .orderConfirm(orderId)
             .then((res) => {
                 alert(res.message);
@@ -37,6 +44,32 @@ function Statistics({ isShow }) {
                 setIsLoading(false);
             });
         getOrders();
+    };
+
+    const handleShowDetailsClick = async (userId, orderId) => {
+        setIsLoading(true);
+        let access_token = localStorage.getItem('access_token');
+        console.log(access_token);
+        if (access_token) {
+            access_token = JSON.parse(access_token);
+            await userAPI
+                .userGetDetails(userId, access_token)
+                .then((res) => {
+                    setSelectedOrder(list.find((order) => order._id === orderId));
+                    setIsLoading(false);
+                    setSelectedUser(res);
+                    setShowDetails(true);
+                })
+                .catch((error) => {
+                    alert(error.message);
+                    setIsLoading(false);
+                });
+        }
+    };
+
+    const handleCloseDetailsClick = (e) => {
+        e.preventDefault();
+        setShowDetails(false);
     };
 
     const handleChangeYear = () => {
@@ -53,6 +86,15 @@ function Statistics({ isShow }) {
         const formattedTime = `${dateObj.getHours()}:${dateObj.getMinutes()}:${dateObj.getSeconds()}`;
         return `${formattedDate} ${formattedTime}`;
     };
+
+    useEffect(() => {
+        if (showDetails) {
+            document.getElementsByClassName(cx('details'))[0]?.classList.add(cx('active'));
+        } else {
+            document.getElementsByClassName(cx('details'))[0]?.classList.remove(cx('active'));
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [showDetails]);
 
     useEffect(() => {
         if (isShow) document.getElementsByClassName(cx('wrapper'))[0].classList.add(cx('active'));
@@ -77,15 +119,18 @@ function Statistics({ isShow }) {
                 return month.toString() === filterMonth;
             });
         }
+        setRenderList(temp);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [filterMonth, filterYear]);
+
+    useEffect(() => {
         setTotalAmount(
-            temp?.reduce((prev, curr) => {
+            renderList?.reduce((prev, curr) => {
                 if (curr.isCompleted) return prev + curr.totalAmount;
                 return prev;
             }, 0),
         );
-        setRenderList(temp);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [filterMonth, filterYear]);
+    }, [renderList]);
 
     useEffect(() => {
         getOrders();
@@ -95,6 +140,7 @@ function Statistics({ isShow }) {
         setFilterYearList(temp);
         setFilterYear('all');
         setFilterMonth('all');
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
@@ -149,24 +195,85 @@ function Statistics({ isShow }) {
                                                 <td>{order.totalAmount.toLocaleString()} VND</td>
                                                 <td>{order.paymentMethod}</td>
                                                 <td>{order.isCompleted ? 'Đã thanh toán' : 'Chưa thanh toán'}</td>
-                                                <td className={cx('method')}>
-                                                    <button
-                                                        className={
-                                                            !order.isCompleted
-                                                                ? cx('method-btn', 'active')
-                                                                : cx('method-btn')
-                                                        }
-                                                        onClick={() => handleConfirmClick(order._id)}
-                                                        disabled={order.isCompleted ? true : false}
-                                                    >
-                                                        Xác nhận
-                                                    </button>
+                                                <td>
+                                                    <div className={cx('method')}>
+                                                        <button
+                                                            className={
+                                                                !order.isCompleted
+                                                                    ? cx('method-btn', 'active')
+                                                                    : cx('method-btn')
+                                                            }
+                                                            onClick={() => handleConfirmClick(order._id)}
+                                                            disabled={order.isCompleted ? true : false}
+                                                        >
+                                                            Xác nhận
+                                                        </button>
+                                                        <button
+                                                            className={cx('method-btn', 'active')}
+                                                            onClick={() =>
+                                                                handleShowDetailsClick(order.customerId, order._id)
+                                                            }
+                                                        >
+                                                            Xem chi tiết
+                                                        </button>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         ),
                                 )}
                         </tbody>
                     </table>
+                </div>
+                <div className={cx('details')}>
+                    <div className={cx('details-container')}>
+                        <button className={cx('details-exit')} onClick={handleCloseDetailsClick}>
+                            <FontAwesomeIcon icon={faXmark} />
+                        </button>
+                        <div className={cx('cart')}>
+                            <h2 className={cx('subtitle')}>Giỏ hàng</h2>
+                            <hr />
+                            {selectedOrder?.products?.map((item) => (
+                                <div className={cx('cart-item')}>
+                                    <p className={cx('cart-item-name')}>{item.name}</p>
+                                    <div className={cx('cart-item-container')}>
+                                        <p className={cx('cart-item-quantity')}>SL: {item.quantity}</p>
+                                        <p className={cx('cart-item-price')}>{item.price.toLocaleString()} VND</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        <div className={cx('info')}>
+                            <h2 className={cx('subtitle')}>Thông tin thanh toán</h2>
+                            <hr />
+                            <p className={cx('info-name')}>
+                                Khách hàng: <b>{selectedUser?.name}</b>
+                            </p>
+                            <p className={cx('info-phone')}>
+                                Số điện thoại: <b>{selectedUser?.phone}</b>
+                            </p>
+                            <p className={cx('info-address')}>
+                                Địa chỉ giao hàng: <b>{selectedUser?.address}</b>
+                            </p>
+                            <p className={cx('info-address')}>
+                                Phương thức thanh toán: <b>{selectedOrder?.paymentMethod}</b>
+                            </p>
+                            <p className={cx('info-address')}>
+                                Trạng thái: <b>{selectedOrder?.isCompleted ? 'Đã thanh toán' : 'Chưa thanh toán'}</b>
+                            </p>
+                            <p className={cx('info-address')}>
+                                Lời nhắn của khách hàng: <b>{selectedOrder?.note || '...'}</b>
+                            </p>
+                            <p className={cx('info-address')}>
+                                Tổng thanh toán:&nbsp;
+                                <b>
+                                    {selectedOrder?.products.reduce(
+                                        (prev, curr) => prev + curr.price * curr.quantity,
+                                        0,
+                                    )}
+                                </b>
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
             <Loading isLoading={isLoading} />
