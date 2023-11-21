@@ -37,7 +37,7 @@ export const userGetDetails = async (id, access_token) => {
 
 export const userUpdate = async (id, formData) => {
     try {
-        const response = await request.post(`update/${id}`, formData, {
+        const response = await request.put(`update/${id}`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
