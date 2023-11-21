@@ -42,7 +42,7 @@ export const userUpdate = async (id, formData) => {
                 'Content-Type': 'multipart/form-data',
             },
         });
-        return response.data;
+        return response;
     } catch (error) {
         alert(error.message);
     }

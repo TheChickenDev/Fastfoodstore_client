@@ -162,6 +162,7 @@ function ProductManagement({ isShow }) {
             setIsAdding(false);
             setIsLoading(false);
         }
+        formRef.current.reset();
     }, [showUpdate]);
 
     return (
