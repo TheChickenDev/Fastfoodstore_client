@@ -140,6 +140,10 @@ function UserManagement({ isShow }) {
     };
 
     useEffect(() => {
+        formRef.current.reset();
+        setName('');
+        setPhone('');
+        setAddress('');
         if (showUpdate) {
             document.getElementsByClassName(cx('update'))[0].classList.add(cx('active'));
             setIsLoading(false);
@@ -147,7 +151,6 @@ function UserManagement({ isShow }) {
             document.getElementsByClassName(cx('update'))[0].classList.remove(cx('active'));
             setIsLoading(false);
         }
-        formRef.current.reset();
     }, [showUpdate]);
 
     return (

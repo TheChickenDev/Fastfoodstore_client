@@ -154,6 +154,11 @@ function ProductManagement({ isShow }) {
     };
 
     useEffect(() => {
+        formRef.current.reset();
+        setName('');
+        setDesc('');
+        setType('');
+        setPrice('');
         if (showUpdate) {
             document.getElementsByClassName(cx('update'))[0].classList.add(cx('active'));
             setIsLoading(false);
@@ -162,7 +167,6 @@ function ProductManagement({ isShow }) {
             setIsAdding(false);
             setIsLoading(false);
         }
-        formRef.current.reset();
     }, [showUpdate]);
 
     return (
