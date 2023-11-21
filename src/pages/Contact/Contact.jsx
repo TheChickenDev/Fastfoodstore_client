@@ -36,10 +36,10 @@ function Contact() {
     function onSubmit(data) {
         emailjs.sendForm('service_b93xz6h', 'template_zp6hnjv', form.current, 'Kr34vRZ3aczdIbbZS').then(
             (result) => {
-                console.log(result.text);
+                alert(result.text);
             },
             (error) => {
-                console.log(error.text);
+                alert(error.text);
             },
         );
         form.current.reset();

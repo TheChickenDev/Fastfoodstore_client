@@ -28,11 +28,11 @@ function Home() {
 
     const handleTransitionedEnd = () => {
         if (bannerIndexRef.current === 0) {
-            pcBannersRef.current.appendChild(pcBannersRef.current.firstElementChild);
-            mobileBannersRef.current.appendChild(mobileBannersRef.current.firstElementChild);
-        } else {
             pcBannersRef.current.prepend(pcBannersRef.current.lastElementChild);
             mobileBannersRef.current.prepend(mobileBannersRef.current.lastElementChild);
+        } else {
+            pcBannersRef.current.appendChild(pcBannersRef.current.firstElementChild);
+            mobileBannersRef.current.appendChild(mobileBannersRef.current.firstElementChild);
         }
         pcBannersRef.current.style.transition = 'none';
         pcBannersRef.current.style.transform = 'translateX(0)';
@@ -52,8 +52,8 @@ function Home() {
         if (decoded?.isAdmin) {
             setIsAdmin(decoded.isAdmin);
         } else {
-            pcBannersRef.current.addEventListener('transitionend', () => handleTransitionedEnd());
-            mobileBannersRef.current.addEventListener('transitionend', () => handleTransitionedEnd());
+            pcBannersRef.current.addEventListener('transitionend', handleTransitionedEnd);
+            mobileBannersRef.current.addEventListener('transitionend', handleTransitionedEnd);
 
             let isDragging = false;
             let changeToLeft = false;
